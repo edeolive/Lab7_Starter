@@ -32,12 +32,7 @@ export class Router {
    * @param {Function} pageFunc The function to run when the page is called
    */
   addPage(page, pageFunc) {
-    /**
-     * TODO Part 1 - Step 2
-     * Just like in the constructor above, store the pageFunc variable inside this
-     * router instance using the 'this' keyword. Substitute 'home' for the variable
-     * page
-     */
+    this[page] = pageFunc;
   }
 
   /**
@@ -65,5 +60,22 @@ export class Router {
      *     and URL + hash to history
      *  4. Finally, call the stored function for the given page
      */
+    if (this[page] == undefined) {
+      console.error(`page function for ${page} is undefined`);
+      return;
+    }
+
+    let hash;
+    if (page == 'home') {
+      hash = '';
+    } else {
+      hash = `#${page}`;
+    }
+
+    if (!statePopped && window.location.hash !== hash) {
+      history.pushState({page}, '', window.location.origin + window.location.pathname + hash)
+    }
+
+    this[page]();
   }
 }
